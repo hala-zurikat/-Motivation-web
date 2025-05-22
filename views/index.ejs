@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Motivatio Website</title>
+  </head>
+  <body>
+    <%-include("partials/header.ejs")%>
+     <div class="wrapper">
+    <main class="content">
+      <section>
+       <% if (locals.theQuote) { %>
+    <div class="card">
+      <div class="card-header">Quote</div>
+      <div class="card-body">
+        <figure>
+          <blockquote class="blockquote">
+            <p><%= theQuote.quote %></p>
+          </blockquote>
+          <figcaption class="blockquote-footer">
+            <%= theQuote.author %>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+    <% } %>
+      </section>
+      <div class="card text-center">
+        <div class="card-header fw-bold">My Tasks</div>
+        <div class="card-body">
+          <form action="/task/submit" method="post" class="input-group mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter your task"
+              aria-label="Example text with button addon"
+              aria-describedby="button-addon1"
+              name="title"
+            />
+
+            <input
+              class="btn btn-outline-secondary"
+              type="submit"
+              id="button-addon1"
+              value="Add"
+            >
+            </input>
+          </form>
+          <ul class="list-group">
+            <% if (locals.tasks) { %>
+      
+            <% tasks.forEach(task => { %>
+           
+ <% if (task.status===false) { %> <li class="list-group-item">
+              <%=task.title %> -
+                <%= task.status?"Done":"Not Done" %>
+           
+             
+<form action="/task/<%= task.id %>?_method=patch" method="post" style="display: inline;">
+             <input
+              class="btn btn-outline-secondary"
+              type="submit"
+              id="button-addon1"
+              value="Done"
+            ></form>
+            <form action="/task/<%= task.id %>?_method=patch/edit" method="post" style="display: inline;">
+             <input
+              class="btn btn-outline-secondary"
+              type="submit"
+              id="button-addon1"
+              value="Edit"
+            ></form>
+            </input> 
+             <form action="/task/<%= task.id %>?_method=DELETE" method="POST" style="display:inline;">
+                     <input
+                         class="btn btn-outline-danger"
+                         type="submit"
+                         value="Delete"
+                        title="Delete"  /></form></input>   <% } %>
+             <% }) %> 
+            </li>
+          </ul>  
+              <% } %>
+
+           <div class="card-header fw-bold">Tasks That i've Done</div>
+           <ul class="list-group">
+            <% if (locals.tasks) { %>
+      
+            <% tasks.forEach(task => { %>
+           
+ <% if (task.status===true) { %> <li class="list-group-item text-decoration-line-through">
+              <%=task.title %> -
+                <%= task.status?"Done":"Not Done"  %>
+          
+            </input> 
+             <form action="/task/<%= task.id %>?_method=DELETE" method="POST" style="display:inline;">
+                     <input
+                         class="btn btn-outline-danger"
+                         type="submit"
+                         value="Delete"
+                        title="Delete"  /></form></input>   <% } %>
+             <% }) %> 
+            </li>
+          </ul>  
+              <% } %>
+        </div>
+   <script>
+  document.querySelector("form").addEventListener("submit", function (e) {
+    const input = document.querySelector("input[name='title']");
+    if (!input.value.trim()) {
+      e.preventDefault();
+      alert("No Task To Add!");
+    }
+  });
+</script>
+ </main>
+    <%-include("partials/footer.ejs")%>
+    </div>
+  </body>
+</html>
